@@ -200,6 +200,67 @@ output "length_subnet_string" {
 }
 # RESULT
 # length_subnet_string = 47
+	
+locals {
+  map = {
+    map_key1 = "map_value1",
+    map_key2 = "map_value2"
+  }
+  list = [
+    "list_item1",
+    "list_item2"
+  ]
+  string1 = "foo"
+  string2 = "bar"
+}
+
+# [] result in a tuple
+output "upper_list_item" {
+  value = [for s in local.list : upper(s)]
+}
+
+# count and add lenths of strings
+output "length_map_item" {
+  value = [for k, v in local.map : length(k) + length(v)]
+}
+
+# show index and value
+output "index" {
+  value = [for i, v in local.list : "${i} is ${v}"]
+}
+
+# If you use { and } instead, the result is an object 
+# and you must provide two result expressions that are separated by the => symbol:
+# map output.
+output "map" {
+  value = {for k, v in local.map : k => upper(v)}
+}
+
+# filtering with if
+output "filtering" {
+  value = {for k, v in local.map : k => upper(v) if v ! = "map_value1"}
+}
+
+filtering = {
+  "map_key2" = "MAP_VALUE2"
+}
+index = [
+  "0 is list_item1",
+  "1 is list_item2",
+]
+length_map_item = [
+  18,
+  18,
+]
+map = {
+  "map_key1" = "MAP_VALUE1"
+  "map_key2" = "MAP_VALUE2"
+}
+upper_list_item = [
+  "LIST_ITEM1",
+  "LIST_ITEM2",
+]
+
 
 
 
